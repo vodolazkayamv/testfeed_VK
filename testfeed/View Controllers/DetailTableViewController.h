@@ -12,8 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DetailTableViewController : UITableViewController
 
-@property (weak, nonatomic) NSString *username;
-@property (weak, nonatomic) NSString *content;
+@property (strong, atomic) NSString *username;
+@property (strong, atomic) NSString *content;
+@property (strong, atomic) NSString *dateAndTime;
+@property (strong, atomic) NSURL *photoURL;
 
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;

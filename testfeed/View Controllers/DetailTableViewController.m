@@ -27,9 +27,11 @@
     self.usernameLabel.text = self.username;
 //    self.contentLabel.text = self.content;
     self.contentTextView.text = self.content;
+    self.dateLabel.text = self.dateAndTime;
     
     self.avatarImageView.layer.cornerRadius = self.avatarImageView.width/2;
     self.avatarImageView.backgroundColor = [UIColor grayColor];
+    [self.avatarImageView setImageWithURL:self.photoURL placeholderImage:nil];
 }
 
 #pragma mark - Table view data source

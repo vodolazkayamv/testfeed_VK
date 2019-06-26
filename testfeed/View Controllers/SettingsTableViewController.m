@@ -99,6 +99,8 @@
 }
 
 - (IBAction)saveAndQuitButtonTouched:(id)sender {
+    [[Preferences sharedPreferences] setScreenName:self.screenNameTextField.text];
+    
     [[Preferences sharedPreferences] flush];
     [self dismissViewControllerAnimated:YES completion:nil];
 }

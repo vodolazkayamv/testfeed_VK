@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) flush;
 
 @property (nonatomic, readwrite) BOOL showAvatar;
+@property (nonatomic, readwrite) NSString *screenName;
 
 @end
 

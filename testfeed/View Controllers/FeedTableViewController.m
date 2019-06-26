@@ -23,63 +23,16 @@ NSString * const SEG_showDetail  =  @"SEGUE_showDetail";
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    
+    [self getFeedWithScreenName:[[Preferences sharedPreferences] screenName]];
+    
     [self.tableView reloadData];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    offset = [NSNumber numberWithInt:0];
-    
-    VKRequest *getWall = [VKRequest requestWithMethod:@"wall.get"
-                                            parameters:@{VK_API_OWNER_ID : @"-1",
-                                                            VK_API_COUNT : @(10),
-                                                           VK_API_OFFSET :  offset,
-                                                         VK_API_EXTENDED : @(YES)
-                                                         }];
-    
-    offset = [NSNumber numberWithInt:offset.integerValue + 10];
-    [getWall executeWithResultBlock:^(VKResponse * response) {
-        //NSLog(@"Json result: %@", response.json);
-        
-        NSError *error = nil;
-        
-        // Get JSON data into a Foundation object
-        id object = response.json;
-        
-        // Verify object retrieved is dictionary
-        if ([object isKindOfClass:[NSDictionary class]] && error == nil)
-        {
-            // Get the value (an array) for key 'results'
-            NSArray *array;
-            
-            if ([[object objectForKey:@"profiles"] isKindOfClass:[NSArray class]])
-            {
-                array = [object objectForKey:@"profiles"];
-                self->profiles = array;
-            }
-            
-            if ([[object objectForKey:@"groups"] isKindOfClass:[NSArray class]])
-            {
-                array = [object objectForKey:@"groups"];
-                self->groups = array;
-            }
-            
-            // Get the 'results' array
-            if ([[object objectForKey:@"items"] isKindOfClass:[NSArray class]])
-            {
-                array = [object objectForKey:@"items"];
-                self->feedItems = array;
-                [self.tableView reloadData];
-            }
-        }
-        
-    } errorBlock:^(NSError * error) {
-        if (error.code != VK_API_ERROR) {
-            [error.vkError.request repeat];
-        } else {
-            NSLog(@"VK error: %@", error);
-        }
-    }];
+
+    [self getFeedWithScreenName:@"-1"];
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -112,8 +65,7 @@ NSString * const SEG_showDetail  =  @"SEGUE_showDetail";
     UILabel *postTextLabel = [cell viewWithTag:104];
     postTextLabel.text = [currentPost objectForKey:@"text"];
     
-    UILabel *usernameTextLabel = [cell viewWithTag:102];
-    usernameTextLabel.text = [NSString stringWithFormat: @"%@", [currentPost objectForKey:@"screen_name"]];
+    
     
     NSTimeInterval ti = [[currentPost objectForKey:@"date"] integerValue];
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:ti];
@@ -132,7 +84,29 @@ NSString * const SEG_showDetail  =  @"SEGUE_showDetail";
         avatar.hidden = NO;
     else
         avatar.hidden = YES;
-        
+    
+    UILabel *usernameTextLabel = [cell viewWithTag:102];
+    if ([[currentPost objectForKey:@"owner_id"] integerValue] < 0) {
+        NSInteger owner = [[currentPost objectForKey:@"owner_id"] integerValue] * -1;
+        for(NSDictionary* group in groups) {
+            if ([[group objectForKey:@"id"] integerValue] == owner) {
+                usernameTextLabel.text = [group objectForKey:@"name"];
+                NSURL *photoURL = [NSURL URLWithString:[group objectForKey:@"photo_50"]];
+                [avatar setImageWithURL:photoURL placeholderImage:nil];
+                break;
+            }
+        }
+    } else {
+        NSInteger owner = [[currentPost objectForKey:@"owner_id"] integerValue];
+        for(NSDictionary* profile in profiles) {
+            if ([[profile objectForKey:@"id"] integerValue] == owner) {
+                usernameTextLabel.text = [NSString stringWithFormat:@"%@ %@", [profile objectForKey:@"first_name"], [profile objectForKey:@"last_name"]];
+                NSURL *photoURL = [NSURL URLWithString:[profile objectForKey:@"photo_50"]];
+                [avatar setImageWithURL:photoURL placeholderImage:nil];
+                break;
+            }
+        }
+    }
     
     return cell;
 }
@@ -186,7 +160,7 @@ NSString * const SEG_showDetail  =  @"SEGUE_showDetail";
 
 - (void) loadWithCount:(int)count andOffset:(int)offset {
     VKRequest *getWall = [VKRequest requestWithMethod:@"wall.get"
-                                           parameters:@{VK_API_OWNER_ID : @"-1",
+                                           parameters:@{VK_API_OWNER_ID : [[Preferences sharedPreferences] screenName],
                                                            VK_API_COUNT : @(count),
                                                           VK_API_OFFSET : @(offset)
                                                         }];
@@ -224,6 +198,64 @@ NSString * const SEG_showDetail  =  @"SEGUE_showDetail";
 }
 
 
+- (void) getFeedWithScreenName:(NSString*)screenName {
+    offset = [NSNumber numberWithInt:0];
+    profiles = nil;
+    groups = nil;
+    feedItems = nil;
+    
+    VKRequest *getWall = [VKRequest requestWithMethod:@"wall.get"
+                                           parameters:@{VK_API_OWNER_ID : screenName,
+                                                        VK_API_COUNT : @(10),
+                                                        VK_API_OFFSET :  offset,
+                                                        VK_API_EXTENDED : @(YES)
+                                                        }];
+    
+    offset = [NSNumber numberWithInt:offset.integerValue + 10];
+    [getWall executeWithResultBlock:^(VKResponse * response) {
+        //NSLog(@"Json result: %@", response.json);
+        
+        NSError *error = nil;
+        
+        // Get JSON data into a Foundation object
+        id object = response.json;
+        
+        // Verify object retrieved is dictionary
+        if ([object isKindOfClass:[NSDictionary class]] && error == nil)
+        {
+            // Get the value (an array) for key 'results'
+            NSArray *array;
+            
+            if ([[object objectForKey:@"profiles"] isKindOfClass:[NSArray class]])
+            {
+                array = [object objectForKey:@"profiles"];
+                self->profiles = array;
+            }
+            
+            if ([[object objectForKey:@"groups"] isKindOfClass:[NSArray class]])
+            {
+                array = [object objectForKey:@"groups"];
+                self->groups = array;
+            }
+            
+            // Get the 'results' array
+            if ([[object objectForKey:@"items"] isKindOfClass:[NSArray class]])
+            {
+                array = [object objectForKey:@"items"];
+                self->feedItems = array;
+                [self.tableView reloadData];
+            }
+        }
+        
+    } errorBlock:^(NSError * error) {
+        if (error.code != VK_API_ERROR) {
+            [error.vkError.request repeat];
+        } else {
+            NSLog(@"VK error: %@", error);
+        }
+    }];
+}
+
 
 #pragma mark - Navigation
 
@@ -237,8 +269,36 @@ NSString * const SEG_showDetail  =  @"SEGUE_showDetail";
         DetailTableViewController * dtvc = [segue destinationViewController];
         NSDictionary *currentPost = feedItems[indexPath.row];
         
+        NSTimeInterval ti = [[currentPost objectForKey:@"date"] integerValue];
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:ti];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"HH:mm E, d MMM yyyy"];
+        NSString *dateString = [dateFormatter stringFromDate:date];
+        
+        dtvc.dateAndTime = dateString;
+
+        if ([[currentPost objectForKey:@"owner_id"] integerValue] < 0) {
+            NSInteger owner = [[currentPost objectForKey:@"owner_id"] integerValue] * -1;
+            for(NSDictionary* group in groups) {
+                if ([[group objectForKey:@"id"] integerValue] == owner) {
+                    dtvc.username = [group objectForKey:@"name"];
+                    dtvc.photoURL = [NSURL URLWithString:[group objectForKey:@"photo_100"]];
+                    break;
+                }
+            }
+        } else {
+            NSInteger owner = [[currentPost objectForKey:@"owner_id"] integerValue];
+            for(NSDictionary* profile in profiles) {
+                if ([[profile objectForKey:@"id"] integerValue] == owner) {
+                    dtvc.username = [NSString stringWithFormat:@"%@ %@", [profile objectForKey:@"first_name"], [profile objectForKey:@"last_name"]];
+                    dtvc.photoURL = [NSURL URLWithString:[profile objectForKey:@"photo_100"]];
+                    break;
+                }
+            }
+        }
+        
+        
         dtvc.content = [currentPost objectForKey:@"text"];
-        dtvc.username = [NSString stringWithFormat: @"%@", [currentPost objectForKey:@"owner_id"]];
     }
 }
 

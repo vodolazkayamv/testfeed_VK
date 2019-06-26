@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet UISwitch *showAvatarSwitch;
 
+@property (weak, nonatomic) IBOutlet UITextField *screenNameTextField;
 
 
 - (IBAction)showAvatarSwitchValueChanged:(id)sender;

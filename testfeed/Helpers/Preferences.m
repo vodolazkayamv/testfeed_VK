@@ -15,7 +15,7 @@
 @end
 
 NSString * const PREF_showAvatar  =  @"CR001";
-
+NSString * const PREF_screenName  =  @"CR002";
 
 @implementation Preferences
 
@@ -38,6 +38,7 @@ NSString * const PREF_showAvatar  =  @"CR001";
     
     // set up default parameters
     [defaultValues setObject:@(NO) forKey:PREF_showAvatar];
+    [defaultValues setObject:@"-1" forKey:PREF_screenName];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults: defaultValues];
     
@@ -68,6 +69,16 @@ NSString * const PREF_showAvatar  =  @"CR001";
 - (void) setShowAvatar:(BOOL)showAvatar
 {
     [prefs setBool:showAvatar forKey:PREF_showAvatar];
+}
+
+- (NSString*) screenName
+{
+    return [prefs objectForKey:PREF_screenName];
+}
+
+- (void) setScreenName:(NSString *)screenName
+{
+    [prefs setObject:screenName forKey:PREF_screenName];
 }
 
 @end

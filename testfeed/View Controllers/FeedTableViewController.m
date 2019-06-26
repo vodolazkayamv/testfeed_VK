@@ -7,7 +7,8 @@
 //
 
 #import "FeedTableViewController.h"
-#import "DetailViewController.h"
+#import "DetailTableViewController.h"
+
 @interface FeedTableViewController ()
 @end
 
@@ -16,6 +17,8 @@ NSString * const SEG_showDetail  =  @"SEGUE_showDetail";
 
 @implementation FeedTableViewController {
     NSArray *feedItems;
+    NSArray *profiles;
+    NSArray *groups;
     NSNumber *offset;
 }
 
@@ -30,8 +33,10 @@ NSString * const SEG_showDetail  =  @"SEGUE_showDetail";
     VKRequest *getWall = [VKRequest requestWithMethod:@"wall.get"
                                             parameters:@{VK_API_OWNER_ID : @"-1",
                                                             VK_API_COUNT : @(10),
-                                                           VK_API_OFFSET :  offset
+                                                           VK_API_OFFSET :  offset,
+                                                         VK_API_EXTENDED : @(YES)
                                                          }];
+    
     offset = [NSNumber numberWithInt:offset.integerValue + 10];
     [getWall executeWithResultBlock:^(VKResponse * response) {
         //NSLog(@"Json result: %@", response.json);
@@ -46,6 +51,19 @@ NSString * const SEG_showDetail  =  @"SEGUE_showDetail";
         {
             // Get the value (an array) for key 'results'
             NSArray *array;
+            
+            if ([[object objectForKey:@"profiles"] isKindOfClass:[NSArray class]])
+            {
+                array = [object objectForKey:@"profiles"];
+                self->profiles = array;
+            }
+            
+            if ([[object objectForKey:@"groups"] isKindOfClass:[NSArray class]])
+            {
+                array = [object objectForKey:@"groups"];
+                self->groups = array;
+            }
+            
             // Get the 'results' array
             if ([[object objectForKey:@"items"] isKindOfClass:[NSArray class]])
             {
@@ -90,27 +108,21 @@ NSString * const SEG_showDetail  =  @"SEGUE_showDetail";
     
     // Configure the cell...
     NSDictionary *currentPost = feedItems[indexPath.row];
+    
     UILabel *postTextLabel = [cell viewWithTag:104];
     postTextLabel.text = [currentPost objectForKey:@"text"];
     
     UILabel *usernameTextLabel = [cell viewWithTag:102];
-    usernameTextLabel.text = [NSString stringWithFormat: @"%@", [currentPost objectForKey:@"owner_id"]];
+    usernameTextLabel.text = [NSString stringWithFormat: @"%@", [currentPost objectForKey:@"screen_name"]];
     
+    NSTimeInterval ti = [[currentPost objectForKey:@"date"] integerValue];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:ti];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm E, d MMM yyyy"];
+    NSString *dateString = [dateFormatter stringFromDate:date];
     
-    //get user info
-    VKRequest *getUser ;
-    NSNumber *userID = [currentPost objectForKey:@"owner_id"];
-    if (userID.integerValue < 0) {
-        userID = @(userID.integerValue * -1);
-        getUser = [VKRequest requestWithMethod:@"groups.getById"
-                                    parameters:@{VK_API_GROUP_IDS : userID
-                                                 }];
-    } else {
-        getUser = [VKRequest requestWithMethod:@"users.get"
-                                               parameters:@{VK_API_USER_IDS : @[[currentPost objectForKey:@"owner_id"]]
-                                                            }];
-    }
-    
+    UILabel *dateLabel = [cell viewWithTag:103];
+    dateLabel.text = dateString;
     
     UIImageView *avatar = [cell viewWithTag:101];
     avatar.layer.cornerRadius = avatar.width / 2;
@@ -222,10 +234,11 @@ NSString * const SEG_showDetail  =  @"SEGUE_showDetail";
     
     if ([segue.identifier isEqualToString:SEG_showDetail] && [sender isKindOfClass:[UITableViewCell class]]) {
         NSIndexPath* indexPath = [self.tableView indexPathForCell:(UITableViewCell*)sender];
-        DetailViewController * dvc = [segue destinationViewController];
+        DetailTableViewController * dtvc = [segue destinationViewController];
         NSDictionary *currentPost = feedItems[indexPath.row];
-        dvc.content = [currentPost objectForKey:@"text"];
-        dvc.username = [NSString stringWithFormat: @"%@", [currentPost objectForKey:@"owner_id"]];
+        
+        dtvc.content = [currentPost objectForKey:@"text"];
+        dtvc.username = [NSString stringWithFormat: @"%@", [currentPost objectForKey:@"owner_id"]];
     }
 }
 

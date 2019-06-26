@@ -10,7 +10,7 @@
 		71B20F907484D0D8CD29EEA0 /* Pods_testfeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D293A42436EA5AF264674DD /* Pods_testfeed.framework */; };
 		AE2EB3F022BBAE4200A1DA52 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2EB3EF22BBAE4200A1DA52 /* Preferences.m */; };
 		AE2EB3F322BBB4A600A1DA52 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2EB3F222BBB4A600A1DA52 /* SettingsTableViewController.m */; };
-		AE2EB3F622BBBED800A1DA52 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2EB3F522BBBED800A1DA52 /* DetailViewController.m */; };
+		AE4777EC22C0EDA300DA7FE3 /* DetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4777EB22C0EDA300DA7FE3 /* DetailTableViewController.m */; };
 		AEEA315622B3B9F100E667DA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AEEA315522B3B9F100E667DA /* AppDelegate.m */; };
 		AEEA315922B3B9F100E667DA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEEA315822B3B9F100E667DA /* ViewController.m */; };
 		AEEA315C22B3B9F100E667DA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEEA315A22B3B9F100E667DA /* Main.storyboard */; };
@@ -30,8 +30,8 @@
 		AE2EB3EF22BBAE4200A1DA52 /* Preferences.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
 		AE2EB3F122BBB4A600A1DA52 /* SettingsTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		AE2EB3F222BBB4A600A1DA52 /* SettingsTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
-		AE2EB3F422BBBED800A1DA52 /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		AE2EB3F522BBBED800A1DA52 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		AE4777EA22C0EDA300DA7FE3 /* DetailTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailTableViewController.h; sourceTree = "<group>"; };
+		AE4777EB22C0EDA300DA7FE3 /* DetailTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailTableViewController.m; sourceTree = "<group>"; };
 		AEEA315122B3B9F100E667DA /* testfeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = testfeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEEA315422B3B9F100E667DA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AEEA315522B3B9F100E667DA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -116,8 +116,8 @@
 				AEEA318122B3D22300E667DA /* FeedTableViewController.m */,
 				AE2EB3F122BBB4A600A1DA52 /* SettingsTableViewController.h */,
 				AE2EB3F222BBB4A600A1DA52 /* SettingsTableViewController.m */,
-				AE2EB3F422BBBED800A1DA52 /* DetailViewController.h */,
-				AE2EB3F522BBBED800A1DA52 /* DetailViewController.m */,
+				AE4777EA22C0EDA300DA7FE3 /* DetailTableViewController.h */,
+				AE4777EB22C0EDA300DA7FE3 /* DetailTableViewController.m */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -310,12 +310,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE4777EC22C0EDA300DA7FE3 /* DetailTableViewController.m in Sources */,
 				AEEA315922B3B9F100E667DA /* ViewController.m in Sources */,
 				AEEA316422B3B9FB00E667DA /* main.m in Sources */,
 				AE2EB3F022BBAE4200A1DA52 /* Preferences.m in Sources */,
 				AE2EB3F322BBB4A600A1DA52 /* SettingsTableViewController.m in Sources */,
 				AEEA317B22B3BF5F00E667DA /* UIColor+CRColor.m in Sources */,
-				AE2EB3F622BBBED800A1DA52 /* DetailViewController.m in Sources */,
 				AEEA318222B3D22300E667DA /* FeedTableViewController.m in Sources */,
 				AEEA317322B3BEF900E667DA /* UILabel+FormattedText.m in Sources */,
 				AEEA317722B3BF1200E667DA /* UIView+Additions.m in Sources */,

@@ -1,8 +1,8 @@
 //
-//  DetailViewController.h
+//  DetailTableViewController.h
 //  testfeed
 //
-//  Created by Мария Водолазкая on 20/06/2019.
+//  Created by Мария Водолазкая on 24/06/2019.
 //  Copyright © 2019 Tutova Maria. All rights reserved.
 //
 
@@ -10,18 +10,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DetailViewController : UIViewController
+@interface DetailTableViewController : UITableViewController
 
 @property (weak, nonatomic) NSString *username;
 @property (weak, nonatomic) NSString *content;
 
-
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
-
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
-
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+
+
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
+@property (weak, nonatomic) IBOutlet UITextView *contentTextView;
+@property (weak, nonatomic) IBOutlet UITableViewCell *contentCell;
 
 @end
 
